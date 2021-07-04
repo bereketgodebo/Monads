@@ -47,19 +47,28 @@ runMaybeFuncs input = case maybeFunc1 input of
 
 -- TODO: Write the above function in one line using the >>= operator!
 runMaybeFuncsBind :: String -> Maybe [Int]
-runMaybeFuncsBind input = undefined
+runMaybeFuncsBind input = maybeFunc1 input >>= maybeFunc2 >>= maybeFunc3
 
 -- TODO: Write the above function with "do" notation!
 runMaybeFuncsDo :: String -> Maybe [Int]
-runMaybeFuncsDo input = undefined
+runMaybeFuncsDo input = do
+    i <- maybeFunc1 input
+    f <- maybeFunc2 i
+    maybeFunc3 f
 
 -- TODO: How do we add "2" to the result of the first function?
 --       First try using "do" notation, then try using (>>=)
 runMaybeFuncsDo2 :: String -> Maybe [Int]
-runMaybeFuncsDo2 input = undefined
+runMaybeFuncsDo2 input = do
+    i <- maybeFunc1 input
+    f <- maybeFunc2 (i + 2)
+    maybeFunc3 f
 
 runMaybeFuncsBind2 :: String -> Maybe [Int]
-runMaybeFuncsBind2 input = undefined
+runMaybeFuncsBind2 input = maybeFunc1 input 
+      >>= (\i -> maybeFunc2 ( i + 2))
+      >>= maybeFunc3 
+
 
 -- Using the Either monad
 eitherFunc1 :: String -> Either String Int
@@ -67,7 +76,7 @@ eitherFunc1 "" = Left "String cannot be empty!"
 eitherFunc1 str = Right $ length str
 
 eitherFunc2 :: Int -> Either String Float
-eitherFunc2 i = if i `mod` 2 == 0
+eitherFunc2 i = if even i 
   then Left "Length cannot be even!"
   else Right ((fromIntegral i) * 3.14159)
 
@@ -79,7 +88,7 @@ eitherFunc3 f = if f > 15.0
 -- TODO: Call the 3 functions above!
 --       Use do-notation or (>>=)
 runEitherFuncs :: String -> Either String [Int]
-runEitherFuncs input = undefined
+runEitherFuncs input = eitherFunc1 input >>= eitherFunc2 >>= eitherFunc3
 
 -- Using a different error type is a **different monad**!
 data CustomError = CustomError
@@ -93,4 +102,8 @@ eitherFuncCustom = undefined
 --       getLine :: IO String
 --       print :: String -> IO ()
 main :: IO ()
-main = undefined
+main = do
+  str <- getLine 
+  let strUp = map toUpper str
+  print strUp
+
